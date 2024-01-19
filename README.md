@@ -228,6 +228,8 @@ Mehmet Can Türkmen: I worked on converting prompt's of each document to word2ve
 
 Mehmet Barış Bozkurt: I did preprocessing to preprocess the text data. Using the Word2Vec model, I created word vectors for "prompts" and "questions" and calculated the similarities between these vectors. Using these similarity scores, I tried to match the most appropriate question for each prompt. To search for specific keywords in text data, I added new words to the keywords2search list and this significantly increased the R2 score. I tried to optimize the max_depth and min_samples_split parameters. Also, I performed sentiment analysis which surprisingly increased R2 test score to %99.5. But then we decided to remove the sentiment analysis and trained another model without sentiment analysis features and we used that model as our main model. 
 
+Yiğit Kaan Tonkaz: I made a research on hyperparameter tuning to use the GridSearch technique to be able to optimize model parameters, collaborated with team members about the enhancement of model accuracy.
+
 
 
 
