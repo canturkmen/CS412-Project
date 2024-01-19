@@ -1,7 +1,7 @@
 # CS412-Project
 Term Project for CS412 Machine Learning
 
-# Team Members:
+# Team Members
 Mehmet Can Türkmen - 29544
 Mehmet Barış Bozkurt - 28137
 Alp Tuna Dağdanaş - 28958
