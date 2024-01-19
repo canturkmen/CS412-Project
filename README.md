@@ -130,6 +130,26 @@ Explanation: Clustered characteristics of the students as Detailed Interactors (
 
 code snippet 8:
 
+pca = PCA(n_components=2)
+X_pca = pca.fit_transform(X.drop('cluster_label', axis=1))  # Ensure to drop non-numeric columns
+X['pca_one'] = X_pca[:, 0]
+X['pca_two'] = X_pca[:, 1]
+
+plt.figure(figsize=(8, 8))
+for cluster_label, marker in zip(cluster_label_mapping.values(), ['o', 's']):
+    cluster_data = X[X['cluster_label'] == cluster_label]
+    plt.scatter(cluster_data['pca_one'], cluster_data['pca_two'], label=cluster_label, marker=marker)
+
+plt.xlabel('Principal Component 1')
+plt.ylabel('Principal Component 2')
+plt.title('2D PCA Plot of KMeans Clusters')
+plt.legend()
+plt.show()
+
+Explanation: Plot the PCA of 2 clusters which were found in the code snippet 7. PCA reduces the multidimentional feature vector into 2 main axes where there is maximum standard deviation and minimum mean square error. 
+
+code snippet 9:
+
 regressor = RandomForestRegressor(n_estimators=200)
 regressor.fit(X_train, y_train)
 max_depth = max(tree.tree_.max_depth for tree in regressor.estimators_)
@@ -150,7 +170,7 @@ results.sort_values(by='mean_test_score', ascending=False)
 
 Explanation: Created a Random Forest Regressor with regularization. Besides, performed hyperparameter tuning using grid search. (Hyperparameters:max_depth, min_samples_split)
 
-code snippet 9:
+code snippet 10:
 regressor = RandomForestRegressor(
     n_estimators=100,
     random_state=42,
@@ -171,7 +191,7 @@ print("MSE Train:", mean_squared_error(y_train, y_train_pred))
 print("MSE TEST:", mean_squared_error(y_test, y_test_pred))
 
 print("R2 Train:", r2_score(y_train, y_train_pred))
-print("R2 TEST: ",r2_score(y_test, y_test_pred)*100)
+print("R2 TEST: ",r2_score(y_test, y_test_pred))
 
 cv_scores = cross_val_score(regressor, X_train, y_train, cv=5, scoring='neg_mean_squared_error')
 cv_scores = -cv_scores
@@ -188,15 +208,15 @@ To start with, we focused on text preprocessing of both questions and prompts. B
 
 # Results
 
-MSE Train:
+MSE Train: 83.0011641434359
 
-MSE Test:
+MSE Test: 84.66406787721209
 
-R2 Train:
+R2 Train: 0.49210016933577416
 
-R2 Test:
+R2 Test: 0.24585921353279994
 
-Cross-Validation Scores:
+Cross-Validation Scores: [270.4059651   78.98221488  69.11151031 561.32855944  46.1776289]
 
 
 # Contributions of Group Members
@@ -205,6 +225,7 @@ Alp Tuna Dağdanaş: I tried to help my group to find the best threshold value f
 
 Zeynep Pancar: Researching the cluster methods that we are going to use and evaluating the results.
 
+Mehmet Can Türkmen: I worked on converting prompt's of each document to word2vec models. Converting to word2vec model increased the R2 score of the test instances. Additionally, I added a new feature called "is_detailed_instructor". To implement it, I used the clustering results of the k-means. After that I also plotted the clusters using PCA in 2 dimensions. Also, I hypertuned 2 models. For the first model, I implemented GridSearchCV and used the best parameters for max depth and minimum splitting. As a result, I recieved 0.995 R2 score. The reason why R2 is so high is because Barış implemented semantic analysis before. For the second model I used GridSearchCV to hypertune the model again. And used the best parameters for maximum depth and minimum splitting values. As a result I recieved 0.245 R2 score. The reason why it is lower from the first model is because I removed the semantic analysis features and we discussed that the second model was better for predicting and decided it as our main model. I also worked on threshold features. I tested some of the possible threshold values to use while implementing the "copy_paste_indicator" features.
 
 
 
