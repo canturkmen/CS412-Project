@@ -168,7 +168,7 @@ cols_to_include = ['param_max_depth', 'param_min_samples_split', 'mean_test_scor
 results = pd.DataFrame(grid_search.cv_results_)[cols_to_include]
 results.sort_values(by='mean_test_score', ascending=False)
 
-Explanation: Created a Random Forest Regressor with regularization. Besides, performed hyperparameter tuning using grid search. (Hyperparameters:max_depth, min_samples_split)
+Explanation: These hyperparameter tuning results will be used for our main model's parameters. Created a Random Forest Regressor with regularization. Besides, performed hyperparameter tuning using grid search. (Hyperparameters:max_depth, min_samples_split)
 
 code snippet 10:
 regressor = RandomForestRegressor(
@@ -197,7 +197,7 @@ cv_scores = cross_val_score(regressor, X_train, y_train, cv=5, scoring='neg_mean
 cv_scores = -cv_scores
 print("Cross-Validation Scores:", cv_scores)
 
-Explanation: Observed cross-validation scores provide an additional evaluation measure by assessing the model's performance on different subsets of the training data. Furthermore, mapped and bounded the score predictions between 0 and 100. 
+Explanation: This RandomForestRegressor will be considered as our model to be graded. Observed cross-validation scores provide an additional evaluation measure by assessing the model's performance on different subsets of the training data. Furthermore, mapped and bounded the score predictions between 0 and 100. 
 
 
 # Methodology
@@ -225,7 +225,7 @@ Alp Tuna Dağdanaş: I tried to help my group to find the best threshold value f
 
 Zeynep Pancar: Researching the cluster methods that we are going to use and evaluating the results.
 
-Mehmet Can Türkmen: I worked on converting prompt's of each document to word2vec models. Converting to word2vec model increased the R2 score of the test instances. Additionally, I added a new feature called "is_detailed_instructor". To implement it, I used the clustering results of the k-means. After that I also plotted the clusters using PCA in 2 dimensions. Also, I hypertuned 2 models. For the first model, I implemented GridSearchCV and used the best parameters for max depth and minimum splitting. As a result, I recieved 0.995 R2 score. The reason why R2 is so high is because Barış implemented semantic analysis before. For the second model I used GridSearchCV to hypertune the model again. And used the best parameters for maximum depth and minimum splitting values. As a result I recieved 0.245 R2 score. The reason why it is lower from the first model is because I removed the semantic analysis features and we discussed that the second model was better for predicting and decided it as our main model. I also worked on threshold features. I tested some of the possible threshold values to use while implementing the "copy_paste_indicator" features.
+Mehmet Can Türkmen: I worked on converting prompt's of each document to word2vec models. Converting to word2vec model increased the R2 score of the test instances. Additionally, I added a new feature called "is_detailed_instructor". To implement it, I used the clustering results of the k-means. After that I also plotted the clusters using PCA in 2 dimensions. Also, I hypertuned 2 models. For the first model, I implemented GridSearchCV and used the best parameters for max depth and minimum splitting. As a result, I recieved 0.995 R2 score. The reason why R2 is so high is because Barış implemented semantic analysis before. For the second model I used GridSearchCV to hypertune the model again. And used the best parameters for maximum depth and minimum splitting values. As a result I recieved 0.245 R2 score. The reason why it is lower from the first model is because I removed the semantic analysis features and we discussed that the second model was better for predicting and decided it as our main model (model to be graded). I also worked on threshold features. I tested some of the possible threshold values to use while implementing the "copy_paste_indicator" features.
 
 
 
