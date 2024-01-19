@@ -3,9 +3,13 @@ Term Project for CS412 Machine Learning
 
 # Team Members
 Mehmet Can Türkmen - 29544
+
 Mehmet Barış Bozkurt - 28137
+
 Alp Tuna Dağdanaş - 28958
+
 Zeynep Pancar - 28303
+
 Yiğit Kaan Tonkaz - 29154
 
 # Overview of the repository
