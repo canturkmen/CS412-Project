@@ -88,10 +88,7 @@ keywords2search = ["error", "no", "thank", "next", "Entropy", "yes", "correct", 
 Explanatinon: We added a couple of more keywords in order to increase our model's performance. We tried to add words which might be used the most.
 
 code snippet4: 
-threshold_copy_paste = 0.8  # Set your desired threshold for copying and pasting
-code2cosine = dict()
-for code, user_prompts_tf_idf in code2prompts_tf_idf.items():
-    code2cosine[code] = pd.DataFrame(cosine_similarity(questions_TF_IDF,user_prompts_tf_idf))
+threshold_copy_paste = 0.8 
 
 for i in range(len(questions)):
     question_mapping_scores[f"copy_paste_indicator_Q{i}"] = (
