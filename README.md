@@ -1,9 +1,14 @@
 # CS412-Project
 Term Project for CS412 Machine Learning
 
+Team Members:
+Mehmet Can Türkmen - 29544
+Mehmet Barış Bozkurt - 28137
+Alp Tuna Dağdanaş - 28958
+Zeynep Pancar - 28303
+Yiğit Kaan Tonkaz - 29154
 
-
-# Overview of the repository:
+# Overview of the repository
 Code snippet1:
 
 nltk.download('stopwords')
@@ -25,7 +30,7 @@ questions_cleaned = [preprocess_text(question) for question in questions]
 
 print(prompts_cleaned)
 print(questions_cleaned)
-Explanation: In this code snippet, we applied text preprocessing to both questions and prompts. The text preprocessing includes converting them to lowercase, removing digits and non-alphanumeric characters. Moreover, we removed stopwords and Lemmatized words. The reason for text preprocessing was to have clean and standardized text which helped us to increase our model's accuracy.
+Explanation: In this code snippet, we applied text preprocessing to both questions and prompts. The text preprocessing includes converting them to lowercase, removing digits and non-alphanumeric characters. Moreover, we removed stopwords and lemmatized words. The reason for text preprocessing was to have clean and standardized text which helped us to increase our model's accuracy.
 
 Code snippet2:
 sentences = [prompt.split() for prompt in prompts]
@@ -74,7 +79,7 @@ Explanation: In this code snippet, we created Word2Vec embeddings for each promp
 
 code snippet 3:
 
-keywords2search = ["error", "no", "thank", "next", "Entropy", "yes", "correct", "exactly", "certainly", "sure", "good", "well", "bad", "here", "how"]
+keywords2search = ["error", "no", "thank", "next", "Entropy", "yes", "correct", "exactly", "certainly", "sure", "good", "well", "bad", "here", "how","problem","great","wrong"]
 
 Explanatinon: We added a couple of more keywords in order to increase our model's performance. We tried to add words which might be used the most.
 
@@ -180,6 +185,7 @@ Explanation: Observed cross-validation scores provide an additional evaluation m
 
 # Methodology
 
+To start with, we focused on text preprocessing of both questions and prompts. By applying text preprocessing, we aimed to increase the model's performance by getting rid of unnecessary characters that are used in prompts and questions. The text preprocessing consisted of converting each letter to lowercase letters, removing digits and non-alphanumeric characters, removing stopwords and lemmatized words. After that, we created a Word2vec model to transform the preprocessed text into numerical vectors to see if a pattern would be observed between words or not. Then, we performed hyperparameter tuning in our Word2vec model in order to enhance the model's accuracy, involving adjustments to vector size, window size, and minimum count. Then we continued with determining a threshold value for a "copy and paste" indicator. By using our Word2vec model and the cosine similarity scores, we set the threshold to 0.8 since that value was giving the best accuracy score for our model. Moreover, the reason why we used cosine similarity scores was because of the fact that those similarity scores were indicating how similiar the prompts and the questions are. After setting the best threshold value, we added a new column next to each question to show in which questions the threshold was exceeded. The reason why we did that was to have additional insights in each student's interaction with ChatGPT. Furhtermore, we added new keywords to search such as "yes", "correct", "exactly", "certainly", "sure", "good", "well", "bad", "here", "how","problem","great","wrong" which might be used by student's the most in their interactions with CHATGPT. Then, we moved on with using a clustering algorithm to enhance our model's score. We selected k-means clutering algorithm because it provided the highest accuracy score in our model (we tried hierarchial clustering and DSCAN clustering algoritms). However, to determine the number of clusters we first wanted to observe silhouette scores and decide the number of clusters with the highest silhouette score. Therefore, we set a cluster range (between 2 and 11) and plotted the silhouette score of each number of cluster. Based on the plot, the highest silhouette score was observed in number of clusters=2 and hence we used that value as our number of clusters in the k-means clustering algorithm. In the k-means algorithm, we clustered characteristics of the students as detailed interactors (students who provide detailed prompts and responses) and concise interactors (students who use shorter prompts and responses). As additional feature engineering feature, we tried to prevent our model from NaN values which would decrease our model's accuracy. Hence, we put mean value for each NaN (Not a Number) entry in its respective column. After that, we created a random forest regressor and additionally, applied regularization to avoid overfitting. The reason why we used random forest regressor as our model was because it is capable of capturing complex relationships and it is a a robust and accurate predictive model. Then, we used GridSearch technique to perform hyperparameter tuning. As hyperparameters, we selected maximum depth and minimum samples split. Upon completion of the GridSearch process, the chosen hyperparameter configuration was implemented in our Random Forest Regressor model. After that, we mapped and bounded the score predictions between 0 and 100 and used cross-validation in order to provide an additional evaluation measure by assessing the model's performance on different subsets of the training data.
 
 
 
@@ -198,6 +204,7 @@ Cross-Validation Scores:
 
 # Contributions of Group Members
 
+Alp Tuna Dağdanaş: 
 
 
 
