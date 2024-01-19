@@ -206,6 +206,7 @@ Cross-Validation Scores:
 # Contributions of Group Members
 
 Alp Tuna Dağdanaş: 
+Zeynep Pancar: Researching the cluster methods that we are going to use and evaluating the results.
 
 
 
