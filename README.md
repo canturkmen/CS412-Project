@@ -176,22 +176,21 @@ main_regressor = RandomForestRegressor(
 
 main_regressor.fit(X_train, y_train)
 
-# Prediction
 y_train_pred = main_regressor.predict(X_train)
 y_test_pred = main_regressor.predict(X_test)
 
-# Map predictions to the (0, 100) range
+
 y_train_pred = np.clip(y_train_pred, 0, 100)
 y_test_pred = np.clip(y_test_pred, 0, 100)
 
-# Calculation of Mean Squared Error (MSE)
+
 print("MSE Train:", mean_squared_error(y_train, y_train_pred))
 print("MSE TEST:", mean_squared_error(y_test, y_test_pred))
 
 print("R2 Train:", r2_score(y_train, y_train_pred))
 print("R2 TEST: ",r2_score(y_test, y_test_pred))
 
-# Cross-validation
+
 cv_scores = cross_val_score(main_regressor, X_train, y_train, cv=5, scoring='neg_mean_squared_error')
 cv_scores = -cv_scores
 print("Cross-Validation Scores:", cv_scores)
