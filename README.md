@@ -150,10 +150,6 @@ Explanation: Plot the PCA of 2 clusters which were found in the code snippet 7. 
 
 code snippet 9:
 
-regressor = RandomForestRegressor(n_estimators=200)
-regressor.fit(X_train, y_train)
-max_depth = max(tree.tree_.max_depth for tree in regressor.estimators_)
-print(f"Maximum depth of any tree in the RandomForestRegressor: {max_depth}")
 param_grid = {
     'max_depth': [5, 8, 12, 16],
     'min_samples_split': [2, 4, 10, 14, 20]
@@ -171,29 +167,32 @@ results.sort_values(by='mean_test_score', ascending=False)
 Explanation: These hyperparameter tuning results will be used for our main model's parameters. Created a Random Forest Regressor with regularization. Besides, performed hyperparameter tuning using grid search. (Hyperparameters:max_depth, min_samples_split)
 
 code snippet 10:
-regressor = RandomForestRegressor(
+main_regressor = RandomForestRegressor(
     n_estimators=100,
     random_state=42,
-    max_depth = 5,
-    min_samples_split = 45
+    max_depth = results["param_max_depth"][0],
+    min_samples_split = results["param_min_samples_split"][0]
 )
 
-regressor.fit(X_train, y_train)
+main_regressor.fit(X_train, y_train)
 
+# Prediction
+y_train_pred = main_regressor.predict(X_train)
+y_test_pred = main_regressor.predict(X_test)
 
-y_train_pred = regressor.predict(X_train)
-y_test_pred = regressor.predict(X_test)
-
+# Map predictions to the (0, 100) range
 y_train_pred = np.clip(y_train_pred, 0, 100)
 y_test_pred = np.clip(y_test_pred, 0, 100)
 
+# Calculation of Mean Squared Error (MSE)
 print("MSE Train:", mean_squared_error(y_train, y_train_pred))
 print("MSE TEST:", mean_squared_error(y_test, y_test_pred))
 
 print("R2 Train:", r2_score(y_train, y_train_pred))
 print("R2 TEST: ",r2_score(y_test, y_test_pred))
 
-cv_scores = cross_val_score(regressor, X_train, y_train, cv=5, scoring='neg_mean_squared_error')
+# Cross-validation
+cv_scores = cross_val_score(main_regressor, X_train, y_train, cv=5, scoring='neg_mean_squared_error')
 cv_scores = -cv_scores
 print("Cross-Validation Scores:", cv_scores)
 
@@ -202,21 +201,22 @@ Explanation: This RandomForestRegressor will be considered as our model to be gr
 
 # Methodology
 
-To start with, we focused on text preprocessing of both questions and prompts. By applying text preprocessing, we aimed to increase the model's performance by getting rid of unnecessary characters that are used in prompts and questions. The text preprocessing consisted of converting each letter to lowercase letters. After that, we created a Word2vec model to transform the preprocessed text into numerical vectors to see if a pattern would be observed between words or not. Then, we performed hyperparameter tuning in our Word2vec model in order to enhance the model's accuracy, involving adjustments to vector size, window size, and minimum count. Then we continued with determining a threshold value for a "copy and paste" indicator. By using our Word2vec model and the cosine similarity scores, we set the threshold to 0.8 since that value was giving the best accuracy score for our model. Moreover, the reason why we used cosine similarity scores was because of the fact that those similarity scores were indicating how similar the prompts and the questions are. After setting the best threshold value, we added a new column next to each question to show in which questions the threshold was exceeded. The reason why we did that was to have additional insights in each student's interaction with ChatGPT. Furthermore, we added new keywords to search such as "yes", "correct", "exactly", "certainly", "sure", "good", "well", "bad", "here", "how","problem","great","wrong" which might be used by student's the most in their interactions with CHATGPT. Then, we moved on with using a clustering algorithm to enhance our model's score. We selected the k-means clustering algorithm because it provided the highest accuracy score in our model (we tried hierarchical clustering and DSCAN clustering algorithms). However, to determine the number of clusters we first wanted to observe silhouette scores and decide the number of clusters with the highest silhouette score. Therefore, we set a cluster range (between 2 and 11) and plotted the silhouette score of each number of clusters. Based on the plot, the highest silhouette score was observed in the number of clusters=2 and hence we used that value as our number of clusters in the k-means clustering algorithm. In the k-means algorithm, we clustered characteristics of the students as detailed interactors (students who provide detailed prompts and responses) and concise interactors (students who use shorter prompts and responses). In addition to that, we used PCA ( Principal Component Analysis) to visualize our k-means clustering algorithm and project it. As an additional engineering feature, we tried to prevent our model from NaN values which would decrease our model's accuracy. Hence, we put the mean value for each NaN (Not a Number) entry in its respective column. After that, we created a random forest regressor and additionally, applied regularization to avoid overfitting. The reason why we used a random forest regressor as our model was because it is capable of capturing complex relationships and it is a robust and accurate predictive model. Then, we used GridSearch technique to perform hyperparameter tuning. As hyperparameters, we selected maximum depth and minimum samples split. Upon completion of the GridSearch process, the chosen hyperparameter configuration was implemented in our Random Forest Regressor model. After that, we mapped and bound the score predictions between 0 and 100 and used cross-validation in order to provide an additional evaluation measure by assessing the model's performance on different subsets of the training data. Moreover, we observed an intriguing result regarding the model accuracy when we performed semantic analysis. Even though we only used that model for observation, it was interesting to observe that the model accuracy was %95 when semantic analysis was performed. 
+To start with, we focused on text preprocessing of both questions and prompts. By applying text preprocessing, we aimed to increase the model's performance by getting rid of unnecessary characters that are used in prompts and questions. The text preprocessing consisted of converting each letter to lowercase letters. After that, we created a Word2vec model to transform the preprocessed text into numerical vectors to see if a pattern would be observed between words or not. Then, we performed hyperparameter tuning in our Word2vec model in order to enhance the model's accuracy, involving adjustments to vector size, window size, and minimum count. Then we continued with determining a threshold value for a "copy and paste" indicator. By using our Word2vec model and the cosine similarity scores, we set the threshold to 0.8 since that value was giving the best accuracy score for our model. Moreover, the reason why we used cosine similarity scores was because of the fact that those similarity scores were indicating how similar the prompts and the questions are. After setting the best threshold value, we added a new column next to each question to show in which questions the threshold was exceeded. The reason why we did that was to have additional insights in each student's interaction with ChatGPT. Furthermore, we added new keywords to search such as "yes", "correct", "exactly", "certainly", "sure", "good", "well", "bad", "here", "how","problem","great","wrong" which might be used by student's the most in their interactions with CHATGPT. Then, we moved on with using a clustering algorithm to enhance our model's score. We selected the k-means clustering algorithm because it provided the highest accuracy score in our model (we tried hierarchical clustering and DSCAN clustering algorithms). However, to determine the number of clusters we first wanted to observe silhouette scores and decide the number of clusters with the highest silhouette score. Therefore, we set a cluster range (between 2 and 11) and plotted the silhouette score of each number of clusters. Based on the plot, the highest silhouette score was observed in the number of clusters=2 and hence we used that value as our number of clusters in the k-means clustering algorithm. In the k-means algorithm, we clustered characteristics of the students as detailed interactors (students who provide detailed prompts and responses) and concise interactors (students who use shorter prompts and responses). In addition to that, we used PCA ( Principal Component Analysis) to visualize our k-means clustering algorithm and project it. As an additional engineering feature, we tried to prevent our model from NaN values which would decrease our model's accuracy. Hence, we put the mean value for each NaN (Not a Number) entry in its respective column. After that, we created a random forest regressor and additionally, applied regularization to avoid overfitting. The reason why we used a random forest regressor as our model was because it is capable of capturing complex relationships and it is a robust and accurate predictive model. Then, we used GridSearch technique to perform hyperparameter tuning. As hyperparameters, we selected maximum depth and minimum samples split. Upon completion of the GridSearch process, the chosen hyperparameter configuration was implemented in our Random Forest Regressor model. After that, we mapped and bound the score predictions between 0 and 100 and used cross-validation in order to provide an additional evaluation measure by assessing the model's performance on different subsets of the training data. Moreover, we observed an intriguing result regarding the model accuracy when we performed semantic analysis. Even though we only used that model for observation, it was interesting to observe that the model accuracy was %95 when semantic analysis was performed. Due to splitting of train and test data which occurs randomly, R2 scores of our main model might differ in each run of our project.
+For example we received 0.32 during one of our runs, but we also received 0.26, 0.23, 0.22, and 0.30 at different runs. 
 
 
 
 # Results
 
-MSE Train: 83.0011641434359
+MSE Train: 34.55089318554958
 
-MSE Test: 84.66406787721209
+MSE TEST: 75.65092270327037
 
-R2 Train: 0.49210016933577416
+R2 Train: 0.788576546132381
 
-R2 Test: 0.24585921353279994
+R2 TEST:  0.32614333595268385
 
-Cross-Validation Scores: [270.4059651   78.98221488  69.11151031 561.32855944  46.1776289]
+Cross-Validation Scores: [301.60246882  81.61635697  81.68690079 567.22264701  53.98111364]
 
 
 # Contributions of Group Members
@@ -225,7 +225,9 @@ Alp Tuna Dağdanaş: I tried to help my group to find the best threshold value f
 
 Zeynep Pancar: Researching the cluster methods that we are going to use and evaluating the results.
 
-Mehmet Can Türkmen: I worked on converting prompt's of each document to word2vec models. Converting to word2vec model increased the R2 score of the test instances. Additionally, I added a new feature called "is_detailed_instructor". To implement it, I used the clustering results of the k-means. After that I also plotted the clusters using PCA in 2 dimensions. Also, I hypertuned 2 models. For the first model, I implemented GridSearchCV and used the best parameters for max depth and minimum splitting. As a result, I recieved 0.995 R2 score. The reason why R2 is so high is because Barış implemented semantic analysis before. For the second model I used GridSearchCV to hypertune the model again. And used the best parameters for maximum depth and minimum splitting values. As a result I recieved 0.245 R2 score. The reason why it is lower from the first model is because I removed the semantic analysis features and we discussed that the second model was better for predicting and decided it as our main model (model to be graded). I also worked on threshold features. I tested some of the possible threshold values to use while implementing the "copy_paste_indicator" features.
+Mehmet Can Türkmen: I worked on converting prompt's of each document to word2vec models. Converting to word2vec model increased the R2 score of the test instances. Additionally, I added a new feature called "is_detailed_instructor". To implement it, I used the clustering results of the k-means. After that I also plotted the clusters using PCA in 2 dimensions. Also, I hypertuned 2 models. For the first model, I implemented GridSearchCV and used the best parameters for max depth and minimum splitting. As a result, I recieved 0.995 R2 score. The reason why R2 is so high is because Barış implemented semantic analysis before. For the second model I used GridSearchCV to hypertune the model again. And used the best parameters for maximum depth and minimum splitting values. As a result I recieved 0.326 R2 score. The reason why it is lower from the first model is because I removed the semantic analysis features and we discussed that the second model was better for predicting and decided it as our main model (model to be graded). I also worked on threshold features. I tested some of the possible threshold values to use while implementing the "copy_paste_indicator" features.
+
+Mehmet Barış Bozkurt: I did preprocessing to preprocess the text data. Using the Word2Vec model, I created word vectors for "prompts" and "questions" and calculated the similarities between these vectors. Using these similarity scores, I tried to match the most appropriate question for each prompt. To search for specific keywords in text data, I added new words to the keywords2search list and this significantly increased the R2 score. I tried to optimize the max_depth and min_samples_split parameters. Also, I performed sentiment analysis which surprisingly increased R2 test score to %99.5. But then we decided to remove the sentiment analysis and trained another model without sentiment analysis features and we used that model as our main model. 
 
 
 
