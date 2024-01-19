@@ -3,7 +3,7 @@ Term Project for CS412 Machine Learning
 
 
 
-Overview of the repository:
+# Overview of the repository:
 Code snippet1:
 
 nltk.download('stopwords')
@@ -178,14 +178,25 @@ print("Cross-Validation Scores:", cv_scores)
 Explanation: Observed cross-validation scores provide an additional evaluation measure by assessing the model's performance on different subsets of the training data. Furthermore, mapped and bounded the score predictions between 0 and 100. 
 
 
+# Methodology
 
 
 
 
+# Results
+
+MSE Train:
+
+MSE Test:
+
+R2 Train:
+
+R2 Test:
+
+Cross-Validation Scores:
 
 
-
-
+# Contributions of Group Members
 
 
 
